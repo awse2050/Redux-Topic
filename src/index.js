@@ -1,17 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+import { createStore } from "redux";
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const add = document.getElementById("add");
+const minus = document.getElementById("minus");
+const number = document.querySelector("span");
+
+const countModifier = (count = 0, action) => { 
+  // Redux에서는 Reducer라고 부른다.
+  if(action.type === "ADD") {
+    return count + 1;
+  } else if (action.type === "MINUS") {
+    return count - 1;
+  }
+  
+  return count; 
+}
+
+const countStore = createStore(countModifier);
+
+const onChange = () => {
+  console.log(countStore.getState());
+  number.innerText = countStore.getState();
+}
+
+countStore.subscribe(onChange);
+
+const handleAdd = () => {
+  countStore.dispatch({type: "ADD"});
+}
+
+const handleMinus = () => {
+  countStore.dispatch({type: "MINUS"});
+}
+
+add.addEventListener("click", handleAdd);
+minus.addEventListener("click", handleMinus);
